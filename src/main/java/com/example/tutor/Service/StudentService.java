@@ -2,7 +2,9 @@ package com.example.tutor.Service;
 
 import com.example.tutor.DTO.StudentReqtDTO;
 import com.example.tutor.DTO.StudentRsponDTO;
+import com.example.tutor.Entity.Course;
 import com.example.tutor.Entity.Student;
+import com.example.tutor.Repository.CourseRepo;
 import com.example.tutor.Repository.StudentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,14 +18,21 @@ public class StudentService {
     @Autowired
     private StudentRepo studentRepo;
 
+    @Autowired
+    private CourseRepo courseRepo;
+
     @Transactional
     public StudentRsponDTO createStudent(StudentReqtDTO requestDTO){
         Student student = new Student();
-
         updateStudentData(student, requestDTO);
 
-        Student saveStudent = studentRepo.save(student);
+        if (requestDTO.getCourse_id() != null){
+            Course course = courseRepo.findById(requestDTO.getCourse_id())
+                    .orElseThrow(()->new RuntimeException("Không thấy khóa học Id "+requestDTO.getCourse_id()));
+            student.setCourse(course);
+        }
 
+        Student saveStudent = studentRepo.save(student);
         return convertToDTO(saveStudent);
     }
 
@@ -50,8 +59,15 @@ public class StudentService {
 
         updateStudentData(student , studentReqtDTO);
 
-        Student updateStudent = studentRepo.save(student);
+        if (studentReqtDTO.getCourse_id() != null){
+            Course course = courseRepo.findById(studentReqtDTO.getCourse_id())
+                    .orElseThrow(()->new RuntimeException("Không tìm thấy khóa học Id "+studentReqtDTO.getCourse_id()));
+            student.setCourse(course);
+        }else {
+            student.setCourse(null);
+        }
 
+        Student updateStudent = studentRepo.save(student);
         return convertToDTO(updateStudent);
     }
 

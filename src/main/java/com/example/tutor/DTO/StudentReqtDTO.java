@@ -12,4 +12,5 @@ public class StudentReqtDTO {
 
     @NotBlank(message = "không bỏ trống ngành học")
     private String major;
+    private Long course_id;
 }
