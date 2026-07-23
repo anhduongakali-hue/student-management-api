@@ -20,26 +20,27 @@ public class StudentService {
     public StudentRsponDTO createStudent(StudentReqtDTO requestDTO){
         Student student = new Student();
 
-        student.setName(requestDTO.getName());
-        student.setMajor(requestDTO.getMajor());
+        updateStudentData(student, requestDTO);
 
         Student saveStudent = studentRepo.save(student);
 
-        return new StudentRsponDTO(saveStudent.getId(), saveStudent.getName(), saveStudent.getMajor());
+        return convertToDTO(saveStudent);
     }
 
-
+    @Transactional
     public List<StudentRsponDTO> getAllStudent(){
         List<Student> students = studentRepo.findByDeletedFalse();
-        return students.stream().map(student -> {
-            return new StudentRsponDTO(student.getId(),student.getName(), student.getMajor());
-        }).collect(Collectors.toList());
+
+        return students.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     public StudentRsponDTO getStudentById(Long id){
         Student student = studentRepo.findByIdAndDeletedFalse(id)
                 .orElseThrow(()-> new RuntimeException("can't find id "+ id));
-        return new StudentRsponDTO(student.getId(), student.getName(), student.getMajor());
+
+        return convertToDTO(student);
     }
 
     @Transactional
@@ -47,11 +48,11 @@ public class StudentService {
         Student student = studentRepo.findById(id)
                 .orElseThrow(()-> new RuntimeException("can't find id "+ id));
 
-        student.setName(studentReqtDTO.getName());
-        student.setMajor(studentReqtDTO.getMajor());
+        updateStudentData(student , studentReqtDTO);
 
         Student updateStudent = studentRepo.save(student);
-        return new StudentRsponDTO(updateStudent.getId(), updateStudent.getName(), updateStudent.getMajor());
+
+        return convertToDTO(updateStudent);
     }
 
     @Transactional
@@ -62,4 +63,15 @@ public class StudentService {
         student.setDeleted(true);
         studentRepo.save(student);
     }
+
+    private StudentRsponDTO convertToDTO(Student student){
+        String courseName = (student.getCourse() != null) ? student.getCourse().getName():"chưa có lớp";
+        return new StudentRsponDTO(student.getId(), student.getName(), student.getMajor(), courseName);
+    }
+
+    private void updateStudentData(Student student , StudentReqtDTO requestDTO){
+        student.setName(requestDTO.getName());
+        student.setMajor(requestDTO.getMajor());
+    }
+
 }

@@ -10,4 +10,6 @@ public class StudentRsponDTO {
     private Long id;
     private String name;
     private String major;
+
+    private String courseName;
 }
