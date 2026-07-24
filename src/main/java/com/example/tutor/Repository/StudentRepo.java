@@ -15,5 +15,6 @@ public interface StudentRepo extends JpaRepository<Student,Long> {
     @EntityGraph(attributePaths = {"course"})
     List<Student> findByDeletedFalse();
 
+    @EntityGraph(attributePaths = {"course"})
     Optional<Student> findByIdAndDeletedFalse(Long id);
 }
