@@ -6,6 +6,7 @@ import com.example.tutor.Repository.StudentRepo;
 import com.example.tutor.Service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +25,15 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<StudentRsponDTO>> getALlStudent(){
-        List<StudentRsponDTO> result = studentService.getAllStudent();
+    public ResponseEntity<Page<StudentRsponDTO>> getALlStudent(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(required = false) String name
+    ){
+        Page<StudentRsponDTO> result = studentService.getAllStudent(name,page,size,sortBy,sortDir);
+
         return ResponseEntity.ok(result);
     }
 

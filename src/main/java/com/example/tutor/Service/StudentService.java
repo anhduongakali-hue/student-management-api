@@ -7,8 +7,12 @@ import com.example.tutor.Entity.Student;
 import com.example.tutor.Repository.CourseRepo;
 import com.example.tutor.Repository.StudentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,12 +41,20 @@ public class StudentService {
     }
 
     @Transactional
-    public List<StudentRsponDTO> getAllStudent(){
-        List<Student> students = studentRepo.findByDeletedFalse();
+    public Page<StudentRsponDTO> getAllStudent(String searchName , int pageNo, int pageSize ,String sortBy,String sortDir){
+        //SORT
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        //PAGINATION
+        Pageable pageable = PageRequest.of(pageNo,pageSize,sort);
 
-        return students.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        Page<Student> studentPage;
+        if (searchName != null && !searchName.trim().isEmpty()){
+            studentPage = studentRepo.searchByName(searchName , pageable);
+        }else {
+            studentPage = studentRepo.findAllActive(pageable);
+        }
+
+        return studentPage.map(this::convertToDTO);
     }
 
     public StudentRsponDTO getStudentById(Long id){
