@@ -41,6 +41,12 @@ public class StudentController {
         return ResponseEntity.ok(result);
     }
 
+    @PutMapping("/{id}/restore")
+    public ResponseEntity<StudentRsponDTO> restoreStudent(@PathVariable Long id) {
+        StudentRsponDTO result = studentService.restoreStudent(id);
+        return ResponseEntity.ok(result);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id){
         studentService.deleteStudent(id);

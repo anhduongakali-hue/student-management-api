@@ -80,6 +80,16 @@ public class StudentService {
         studentRepo.save(student);
     }
 
+    @Transactional
+    public StudentRsponDTO restoreStudent(Long id){
+        Student student = studentRepo.findById(id)
+                .orElseThrow(()->new RuntimeException("Can't find id "+id));
+        student.setDeleted(false);
+
+        Student restoredStudent = studentRepo.save(student);
+        return convertToDTO(restoredStudent);
+    }
+
     private StudentRsponDTO convertToDTO(Student student){
         String courseName = (student.getCourse() != null) ? student.getCourse().getName():"chưa có lớp";
         return new StudentRsponDTO(student.getId(), student.getName(), student.getMajor(), courseName);
