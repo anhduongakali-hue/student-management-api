@@ -10,8 +10,8 @@
 Dự án này sử dụng phương pháp Database-First. Bạn cần mở MySQL và chạy đoạn script sau để tạo cơ sở dữ liệu và bảng:
 
 ```sql
-CREATE DATABASE IF NOT EXISTS school_db;
-USE school_db;
+CREATE DATABASE IF NOT EXISTS tutor_school;
+USE tutor_school;
 
 CREATE TABLE IF NOT EXISTS student (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
