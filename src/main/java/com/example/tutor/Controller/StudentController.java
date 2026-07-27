@@ -5,13 +5,14 @@ import com.example.tutor.DTO.StudentRsponDTO;
 import com.example.tutor.Repository.StudentRepo;
 import com.example.tutor.Service.StudentService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/students")
 public class StudentController {
@@ -32,6 +33,8 @@ public class StudentController {
             @RequestParam(defaultValue = "asc") String sortDir,
             @RequestParam(required = false) String name
     ){
+        log.info("API[GET /students]: Nhận request lấy danh sách sinh viên.Từ khóa:'{}',Trang:{},Số lượng:{} ",name , page,size);
+
         Page<StudentRsponDTO> result = studentService.getAllStudent(name,page,size,sortBy,sortDir);
 
         return ResponseEntity.ok(result);

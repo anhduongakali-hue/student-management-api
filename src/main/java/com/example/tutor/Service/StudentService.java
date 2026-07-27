@@ -6,6 +6,7 @@ import com.example.tutor.Entity.Course;
 import com.example.tutor.Entity.Student;
 import com.example.tutor.Repository.CourseRepo;
 import com.example.tutor.Repository.StudentRepo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class StudentService {
     @Autowired
@@ -42,6 +44,8 @@ public class StudentService {
 
     @Transactional
     public Page<StudentRsponDTO> getAllStudent(String searchName , int pageNo, int pageSize ,String sortBy,String sortDir){
+        log.info("Service: Đang lấy danh sách sinh viên (Sắp xếp theo:{},{}) " ,sortBy,sortDir);
+
         //SORT
         Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         //PAGINATION
@@ -54,12 +58,20 @@ public class StudentService {
             studentPage = studentRepo.findAllActive(pageable);
         }
 
+        log.info("Service: Đã tìm thấy {} kết quả (Trên tổng số {} sinh viên ", studentPage.getNumberOfElements(),studentPage.getTotalElements());
         return studentPage.map(this::convertToDTO);
     }
 
     public StudentRsponDTO getStudentById(Long id){
+        log.info("tìm sinh viên có id = {}" , id);
+
         Student student = studentRepo.findByIdAndDeletedFalse(id)
-                .orElseThrow(()-> new RuntimeException("can't find id "+ id));
+                .orElseThrow(()->{
+                    log.error("không tồn tại sinh viên ID = {}", id );
+                    return new RuntimeException("can't find id "+ id);
+                });
+
+        log.info("tìm thấy sinh viên :{}" , student.getName());
 
         return convertToDTO(student);
     }
