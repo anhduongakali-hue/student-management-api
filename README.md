@@ -45,3 +45,26 @@ Server sẽ khởi động ở cổng `8080`.
 ## Các tính năng kỹ thuật nổi bật
 * **Soft Delete:** Khi gọi API xóa, dữ liệu không mất đi mà chỉ được cập nhật trạng thái `deleted = true` trong cơ sở dữ liệu.
 * **Global Exception Handler:** Bắt và định dạng lại toàn bộ lỗi (Validation, RuntimeException) thành file JSON thân thiện với người dùng và trả về đúng HTTP Status Code (400, 404).
+
+## 🛡️ Bảo mật & Xác thực (Security)
+
+Dự án đã được tích hợp **Spring Security** để quản lý xác thực (Authentication) và phân quyền (Authorization) người dùng.
+
+### ✨ Các tính năng bảo mật hiện tại:
+* **Xác thực qua Database:** Người dùng đăng nhập bằng tài khoản lưu trực tiếp trong cơ sở dữ liệu (`User` & `Role`).
+* **Mã hóa mật khẩu an toàn:** Sử dụng `BCryptPasswordEncoder` để băm mật khẩu trước khi lưu.
+* **Tự động hóa dữ liệu (Data Seeding):** Sử dụng `CommandLineRunner` để tự động tiêm tài khoản Admin vào Database ngay khi khởi động ứng dụng.
+* **Tối ưu mã nguồn:** Áp dụng triệt để `Lombok` (`@Builder`, `@Getter`, `@Setter`) cho các Entity để code gọn gàng, dễ bảo trì.
+
+### 🚀 Hướng dẫn Test API trên Postman
+
+Hiện tại hệ thống đang sử dụng cơ chế **HTTP Basic Auth**. Bất kỳ API nào gọi vào hệ thống (VD: `GET /students`) đều yêu cầu phải có thẻ thông hành.
+
+**Các bước để test:**
+1. Khởi động Server. Hệ thống sẽ tự động tạo một tài khoản mặc định (Username: `admin` | Password: `123456`).
+2. Mở Postman, nhập URL của API cần test.
+3. Bên dưới ô URL, chọn tab **Authorization**.
+4. Ở mục **Type**, chọn **Basic Auth**.
+5. Nhập Username: `admin` và Password: `akalitt7` vào khung bên phải.
+6. Bấm **Send** và nhận kết quả trả về (Mã 200 OK). 
+*(Lưu ý: Nếu không nhập hoặc nhập sai, hệ thống sẽ chặn đứng và trả về mã lỗi 401 Unauthorized).*
