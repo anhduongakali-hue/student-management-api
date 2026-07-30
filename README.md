@@ -61,7 +61,7 @@ Dự án đã được tích hợp **Spring Security** để quản lý xác th�
 Hiện tại hệ thống đang sử dụng cơ chế **HTTP Basic Auth**. Bất kỳ API nào gọi vào hệ thống (VD: `GET /students`) đều yêu cầu phải có thẻ thông hành.
 
 **Các bước để test:**
-1. Khởi động Server. Hệ thống sẽ tự động tạo một tài khoản mặc định (Username: `admin` | Password: `123456`).
+1. Khởi động Server. Hệ thống sẽ tự động tạo một tài khoản mặc định (Username: `admin` | Password: `akalitt7`).
 2. Mở Postman, nhập URL của API cần test.
 3. Bên dưới ô URL, chọn tab **Authorization**.
 4. Ở mục **Type**, chọn **Basic Auth**.
