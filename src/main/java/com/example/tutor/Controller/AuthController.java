@@ -20,4 +20,13 @@ public class AuthController {
     public ResponseEntity<AuthRsponDTO> login(@RequestBody AuthReqtDTO request){
         return ResponseEntity.ok(authService.authenticate(request));
     }
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody AuthReqtDTO request){
+        try {
+            String resultMessage = authService.register(request);
+            return ResponseEntity.ok(resultMessage);
+        }catch (RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
