@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 public class StudentController {
     @Autowired
     StudentService studentService;
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<StudentRsponDTO> createStudent(@Valid @RequestBody StudentReqtDTO requestDTO){
         StudentRsponDTO result = studentService.createStudent(requestDTO);
@@ -45,19 +46,19 @@ public class StudentController {
         StudentRsponDTO result = studentService.getStudentById(id);
         return ResponseEntity.ok(result);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<StudentRsponDTO> updateStudent(@PathVariable Long id,@Valid @RequestBody StudentReqtDTO studentReqtDTO){
         StudentRsponDTO result = studentService.updateStudent(id,studentReqtDTO);
         return ResponseEntity.ok(result);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/{id}/restore")
     public ResponseEntity<StudentRsponDTO> restoreStudent(@PathVariable Long id) {
         StudentRsponDTO result = studentService.restoreStudent(id);
         return ResponseEntity.ok(result);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id){
         studentService.deleteStudent(id);
