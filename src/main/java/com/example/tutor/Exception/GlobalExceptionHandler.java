@@ -4,11 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import com.example.tutor.DTO.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +17,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String , String>> handlerValidationException(MethodArgumentNotValidException ex){
+    public ResponseEntity<ErrorResponse> handlerValidationException(MethodArgumentNotValidException ex){
         log.warn("Dữ liệu đầu vào không hợp lệ . Trả lỗi danh sách cho Client .");
 
         Map<String , String > errors = new HashMap<>();
@@ -26,16 +27,42 @@ public class GlobalExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+
+        ErrorResponse response = ErrorResponse.builder()
+                .success(false)
+                .status(HttpStatus.BAD_REQUEST.value())
+                .errorCode("VALIDATION ERROR")
+                .message("Dữ liệu đầu vào lỗi.")
+                .errors(errors)
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String , String>> handlerRuntimeException(RuntimeException ex){
+    @ExceptionHandler(AppException.class)
+    public ResponseEntity<ErrorResponse> handlerAppException(AppException ex){
+        ErrorResponse response = ErrorResponse.builder()
+                .success(false)
+                .status(ex.getStatus().value())
+                .errorCode(ex.getStatus().name())
+                .message(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(response, ex.getStatus());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handlerRuntimeException(RuntimeException ex){
         log.error("Lỗi runtime: " , ex);
 
-        Map<String , String> errorResponse = new HashMap<>();
-        errorResponse.put("error", ex.getMessage());
-
-        return new ResponseEntity<>(errorResponse,HttpStatus.NOT_FOUND);
+        ErrorResponse response = ErrorResponse.builder()
+                .success(false)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .errorCode("INTERNAL_SERVER_ERROR")
+                .message("Lỗi hệ thống , thử lại sau")
+                .timestamp(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

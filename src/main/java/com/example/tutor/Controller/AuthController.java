@@ -22,11 +22,7 @@ public class AuthController {
     }
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody AuthReqtDTO request){
-        try {
-            String resultMessage = authService.register(request);
-            return ResponseEntity.ok(resultMessage);
-        }catch (RuntimeException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+
+        return ResponseEntity.ok(authService.register(request));
     }
 }

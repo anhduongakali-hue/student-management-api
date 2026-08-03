@@ -2,7 +2,6 @@ package com.example.tutor.Controller;
 
 import com.example.tutor.DTO.StudentReqtDTO;
 import com.example.tutor.DTO.StudentRsponDTO;
-import com.example.tutor.Repository.StudentRepo;
 import com.example.tutor.Service.StudentService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/students")

@@ -1,6 +1,7 @@
 package com.example.tutor.Security;
 
 import com.example.tutor.Entity.User;
+import lombok.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

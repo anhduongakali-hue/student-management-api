@@ -4,6 +4,7 @@ import com.example.tutor.DTO.StudentReqtDTO;
 import com.example.tutor.DTO.StudentRsponDTO;
 import com.example.tutor.Entity.Course;
 import com.example.tutor.Entity.Student;
+import com.example.tutor.Exception.AppException;
 import com.example.tutor.Repository.CourseRepo;
 import com.example.tutor.Repository.StudentRepo;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
@@ -31,7 +33,7 @@ public class StudentService {
 
         if (requestDTO.getCourse_id() != null){
             Course course = courseRepo.findById(requestDTO.getCourse_id())
-                    .orElseThrow(()->new RuntimeException("Không thấy khóa học Id "+requestDTO.getCourse_id()));
+                    .orElseThrow(()->new AppException(HttpStatus.NOT_FOUND,"Không thấy khóa học Id "+requestDTO.getCourse_id()));
             student.setCourse(course);
         }
 
@@ -65,7 +67,7 @@ public class StudentService {
         Student student = studentRepo.findByIdAndDeletedFalse(id)
                 .orElseThrow(()->{
                     log.error("không tồn tại sinh viên ID = {}", id );
-                    return new RuntimeException("can't find id "+ id);
+                    return new AppException(HttpStatus.NOT_FOUND,"không tìm thấy sinh viên ID: "+ id);
                 });
 
         log.info("tìm thấy sinh viên :{}" , student.getName());
@@ -76,13 +78,13 @@ public class StudentService {
     @Transactional
     public StudentRsponDTO updateStudent(Long id,StudentReqtDTO studentReqtDTO){
         Student student = studentRepo.findById(id)
-                .orElseThrow(()-> new RuntimeException("can't find id "+ id));
+                .orElseThrow(()-> new AppException(HttpStatus.NOT_FOUND,"Không tìm thấy sinh viên Id "+ id));
 
         updateStudentData(student , studentReqtDTO);
 
         if (studentReqtDTO.getCourse_id() != null){
             Course course = courseRepo.findById(studentReqtDTO.getCourse_id())
-                    .orElseThrow(()->new RuntimeException("Không tìm thấy khóa học Id "+studentReqtDTO.getCourse_id()));
+                    .orElseThrow(()->new AppException(HttpStatus.NOT_FOUND,"Không tìm thấy khóa học Id "+studentReqtDTO.getCourse_id()));
             student.setCourse(course);
         }else {
             student.setCourse(null);
@@ -95,7 +97,7 @@ public class StudentService {
     @Transactional
     public void deleteStudent(Long id) {
         Student student = studentRepo.findByIdAndDeletedFalse(id)
-                .orElseThrow(()-> new RuntimeException("Can't find Id " + id));
+                .orElseThrow(()-> new AppException(HttpStatus.NOT_FOUND,"Không thấy sinh viên Id " + id));
 
         student.setDeleted(true);
         studentRepo.save(student);
@@ -104,7 +106,7 @@ public class StudentService {
     @Transactional
     public StudentRsponDTO restoreStudent(Long id){
         Student student = studentRepo.findById(id)
-                .orElseThrow(()->new RuntimeException("Can't find id "+id));
+                .orElseThrow(()->new AppException(HttpStatus.NOT_FOUND,"Can't find id "+id));
         student.setDeleted(false);
 
         Student restoredStudent = studentRepo.save(student);
@@ -120,5 +122,4 @@ public class StudentService {
         student.setName(requestDTO.getName());
         student.setMajor(requestDTO.getMajor());
     }
-
 }
