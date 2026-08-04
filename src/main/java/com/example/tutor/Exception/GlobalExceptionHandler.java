@@ -40,8 +40,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(AppException.class)
-    public ResponseEntity<ErrorResponse> handlerAppException(AppException ex){
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<ErrorResponse> handlerAppException(BaseException ex){
         ErrorResponse response = ErrorResponse.builder()
                 .success(false)
                 .status(ex.getStatus().value())
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, ex.getStatus());
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handlerRuntimeException(RuntimeException ex){
         log.error("Lỗi runtime: " , ex);
 
