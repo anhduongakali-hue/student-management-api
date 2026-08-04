@@ -3,6 +3,7 @@ package com.example.tutor.Controller;
 import com.example.tutor.DTO.AuthReqtDTO;
 import com.example.tutor.DTO.AuthRsponDTO;
 import com.example.tutor.Service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,11 +18,11 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthRsponDTO> login(@RequestBody AuthReqtDTO request){
+    public ResponseEntity<AuthRsponDTO> login(@Valid @RequestBody AuthReqtDTO request){
         return ResponseEntity.ok(authService.authenticate(request));
     }
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody AuthReqtDTO request){
+    public ResponseEntity<?> register(@Valid @RequestBody AuthReqtDTO request){
 
         return ResponseEntity.ok(authService.register(request));
     }
