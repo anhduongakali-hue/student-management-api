@@ -17,4 +17,6 @@ public class Course {
 
     @Column(name = "name")
     private String name;
+
+    private boolean deleted = false;
 }

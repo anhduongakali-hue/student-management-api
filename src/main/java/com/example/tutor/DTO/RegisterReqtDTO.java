@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthReqtDTO {
+public class RegisterReqtDTO {
 
     @NotBlank(message = "không để trống tên đăng nhập")
     @Size(min = 3,message = "tên đăng nhập ít nhất 3 kí tự")

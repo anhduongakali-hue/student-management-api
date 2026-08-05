@@ -26,4 +26,6 @@ public interface StudentRepo extends JpaRepository<Student,Long> {
 
     @Query("SELECT s FROM Student s WHERE LOWER (s.name) LIKE LOWER(CONCAT('%',:name,'%')) AND s.deleted=false")
     Page<Student> searchByName(@Param("name") String name , Pageable pageable);
+
+    boolean existsByCourse_IdAndDeletedFalse(Long coursedId);
 }

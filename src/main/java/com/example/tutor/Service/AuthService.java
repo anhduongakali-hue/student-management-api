@@ -1,7 +1,8 @@
 package com.example.tutor.Service;
 
 
-import com.example.tutor.DTO.AuthReqtDTO;
+import com.example.tutor.DTO.LoginReqtDTO;
+import com.example.tutor.DTO.RegisterReqtDTO;
 import com.example.tutor.DTO.AuthRsponDTO;
 import com.example.tutor.Entity.Role;
 import com.example.tutor.Entity.User;
@@ -13,7 +14,6 @@ import com.example.tutor.Security.JWT.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,7 +33,7 @@ public class AuthService{
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthRsponDTO authenticate(AuthReqtDTO request){
+    public AuthRsponDTO authenticate(LoginReqtDTO request){
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -51,7 +51,7 @@ public class AuthService{
                 .build();
     }
 
-    public String register(AuthReqtDTO request){
+    public String register(RegisterReqtDTO request){
         if (userRepo.findByUsername(request.getUsername()).isPresent()){
             throw new DuplicateResourceException("Tên đăng nhập tồn tại!");
         }
