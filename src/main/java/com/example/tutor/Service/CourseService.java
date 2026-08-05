@@ -3,6 +3,7 @@ package com.example.tutor.Service;
 import com.example.tutor.DTO.CourseReqtDTO;
 import com.example.tutor.DTO.CourseResponDTO;
 import com.example.tutor.Entity.Course;
+import com.example.tutor.Exception.InvalidOperationException;
 import com.example.tutor.Exception.ResourceNotFoundException;
 import com.example.tutor.Repository.CourseRepo;
 import com.example.tutor.Repository.StudentRepo;
@@ -85,7 +86,7 @@ public class CourseService {
                 });
         if (studentRepo.existsByCourse_IdAndDeletedFalse(id)){
             log.warn("Xóa thất bại . Khóa học ID = {} đang có sinh viên tham gia ",id);
-            throw new IllegalStateException("Không thể xóa khóa học đang có sinh viên tham gia");
+            throw new InvalidOperationException("Không thể xóa khóa học đang có sinh viên tham gia");
         }
 
         course.setDeleted(true);
