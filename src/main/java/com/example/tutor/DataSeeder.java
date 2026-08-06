@@ -7,7 +7,6 @@ import com.example.tutor.Repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -19,7 +18,6 @@ public class DataSeeder implements CommandLineRunner {
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
-    private final PathPatternRequestMatcher.Builder builder;
 
     @Override
     public void run(String...arg) throws Exception{

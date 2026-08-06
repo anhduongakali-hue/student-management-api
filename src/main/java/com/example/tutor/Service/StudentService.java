@@ -82,7 +82,7 @@ public class StudentService {
         updateStudentData(student , studentReqtDTO);
 
         if (studentReqtDTO.getCourse_id() != null){
-            Course course = courseRepo.findById(studentReqtDTO.getCourse_id())
+            Course course = courseRepo.findByIdAndDeletedFalse(studentReqtDTO.getCourse_id())
                     .orElseThrow(()->new ResourceNotFoundException("Không tìm thấy khóa học Id "+studentReqtDTO.getCourse_id()));
             student.setCourse(course);
         }else {
