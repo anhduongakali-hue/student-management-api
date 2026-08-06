@@ -2,7 +2,6 @@ package com.example.tutor.Controller;
 
 import com.example.tutor.DTO.CourseReqtDTO;
 import com.example.tutor.DTO.CourseResponDTO;
-import com.example.tutor.Entity.Course;
 import com.example.tutor.Service.CourseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ public class CourseController {
     @PostMapping
     public ResponseEntity<CourseResponDTO> createCourse(@Valid @RequestBody CourseReqtDTO request){
         CourseResponDTO result = courseService.createCourse(request);
-        return new ResponseEntity<>(courseService.createCourse(request), HttpStatus.CREATED);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @GetMapping
