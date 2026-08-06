@@ -18,5 +18,6 @@ public class Course {
     @Column(name = "name")
     private String name;
 
+    //Soft delete
     private boolean deleted = false;
 }

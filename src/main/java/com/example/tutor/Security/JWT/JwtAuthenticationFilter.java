@@ -23,15 +23,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final CustomUserDetailsService userDetailsService;
 
     @Override
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
+        return request.getServletPath().startsWith("api/auth");
+    }
+
+    @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
             )throws ServletException, IOException{
-        if (request.getServletPath().contains("api/auth")){
-            filterChain.doFilter(request, response);
-            return;
-        }
+
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String username;
